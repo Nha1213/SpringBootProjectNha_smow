@@ -34,14 +34,16 @@ public class RoleService {
     // Update role
     public Role update(Integer id, Role role) {
 
+        //containsKey is find key
         if(roleStore.containsKey(id)) {
             role.setId(id);
             roleStore.put(id, role);
 
             return role;
         }
-
-        return null;
+        else {
+         throw  new RuntimeException("Role Not Found");
+        }
     }
 
     // Delete role
