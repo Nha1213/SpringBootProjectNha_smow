@@ -5,6 +5,7 @@
 
 package com.nha.nha_smos;
 
+import com.nha.nha_smos.Model.RoleModel;
 import lombok.extern.java.Log;
 import org.apache.catalina.User;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,13 @@ import java.util.Objects;
 @RequestMapping("/api/user")
 public class  HomeController{
 
+    @GetMapping("/getall")
+    public String GetHome(){
+        RoleModel roleModel = new RoleModel();
+        roleModel.setName("ROLE_ADMIN");
+
+        return  roleModel.getName();
+    }
 //    path params meaning post params
     @GetMapping("/{id}/order/{orderId}")
     public String UserGet(@PathVariable Long id, @PathVariable Long orderId){
