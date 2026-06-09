@@ -2,6 +2,9 @@ package com.nha.nha_smos.Service;
 
 
 
+import com.nha.nha_smos.DTO.RoleRequest;
+import com.nha.nha_smos.DTO.RoleResponse;
+import com.nha.nha_smos.Mapper.RoleMapper;
 import com.nha.nha_smos.Model.RoleModel;
 import com.nha.nha_smos.Repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,42 +13,60 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor // It had no  constructor If have constructor not RequiredArgsConstructor
 public class RoleService {
 
     private final RoleRepository roleRepository;
+    private final RoleMapper roleMapper;
 
     //constructor
-//    public RoleService(RoleRepository roleRepository) {
+//    public RoleService(RoleRepository roleRepository, RoleMapper roleMapper) {
 //        this.roleRepository = roleRepository;
+//        this.roleMapper = roleMapper;
 //    }
 
-    public List<RoleModel> getList() {
-        return roleRepository.findAll();
+    public List<RoleResponse> getList() {
+        return roleRepository.findAll()
+                .stream()
+                .map(roleMapper::toResponse)
+                .toList();
     }
 
-    public  RoleModel getRoleById(int id){
-        return roleRepository.findById(id).get();
+    public  RoleResponse getRoleById(int id){
+
+        RoleModel role = roleRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("Role Not Found"));
+        return roleMapper.toResponse(role);
+
     }
 
 
-    public RoleModel create(RoleModel roleModel){
-        return roleRepository.save(roleModel);
+    public RoleResponse create(RoleRequest roleRequest){
+        if(roleRepository.existsByName(roleRequest.getName())){
+            throw new RuntimeException("Role Already Exists");
+        }
+
+        RoleModel role = roleMapper.toEntityTwo(roleRequest);
+        RoleModel roleModel = roleRepository.save(role);
+        return roleMapper.toResponse(roleModel);
     }
 
-    public RoleModel update(Integer id, RoleModel roleModel){
-        RoleModel isExistRole = roleRepository.findById(id).orElseThrow(
-                ()->new RuntimeException("Role Not Found")
-        );
-        isExistRole.setName(roleModel.getName());
-        isExistRole.setDescription(roleModel.getDescription());
-        isExistRole.setTest(roleModel.getTest());
-        return roleRepository.save(isExistRole);
+    public RoleResponse update(Integer id, RoleRequest roleRequest){
+        RoleModel role=   roleRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("Role Not Found"));
+        role.setName(roleRequest.getName());
+        role.setDescription(roleRequest.getDescription());
+        role.setTest(roleRequest.getTest());
+
+        RoleModel roleModel = roleRepository.save(role);
+
+        return roleMapper.toResponse(roleModel);
     }
 
     public void delete(Integer id){
-        RoleModel isExistRole = roleRepository.findById(id).orElseThrow(() -> new RuntimeException("Role Not Found"));
-        roleRepository.delete(isExistRole);
+        if(roleRepository.existsById(id)){
+            roleRepository.deleteById(id);
+        }
     }
 
 
@@ -53,71 +74,3 @@ public class RoleService {
 
 
 
-
-
-
-
-
-
-//
-//import com.nha.nha_smos.Entity.Role;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.*;
-//
-//@Service
-//public class RoleService {
-//
-//    private final Map<Integer, Role> roleStore = new HashMap<>();
-//    private int idCounter = 0;
-//
-//    // Get all roles
-//    public Map<String, Object> list() {
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("roles", roleStore.values());
-//        result.put("Message", "success");
-//        result.put("count", 19);
-//        return  result;
-//    }
-////    public List<Role> list() {
-////        return new ArrayList<>(roleStore.values());
-////    }
-//
-//    // Get one role
-//    public Role listOne(Integer id) {
-//        return roleStore.get(id);
-//    }
-//
-//    // Create role
-//    public Role create(Role role) {
-//        idCounter++;
-//        role.setId(idCounter);
-//
-//        roleStore.put(idCounter, role);
-//
-//        return role;
-//    }
-//
-//    // Update role
-//    public Role update(Integer id, Role role) {
-//
-//        //containsKey is find key
-//        if(roleStore.containsKey(id)) {
-//            role.setId(id);
-//            roleStore.put(id, role);
-//
-//            return role;
-//        }
-//        else {
-//         throw  new RuntimeException("Role Not Found");
-//        }
-//    }
-//
-//    // Delete role
-//    public String delete(Integer id) {
-//
-//        roleStore.remove(id);
-//
-//        return "Deleted Successfully";
-//    }
-//

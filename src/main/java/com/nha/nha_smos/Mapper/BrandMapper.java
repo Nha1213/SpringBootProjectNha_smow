@@ -34,15 +34,4 @@ public class BrandMapper {
                 .updatedBy(entity.getUpdatedBy())
                 .build();
     }
-
-    public BrandRequest toRequest(BrandResponse entity){
-        return BrandRequest.builder()
-                .name(entity.getName())
-                .code(entity.getCode())
-                .description(entity.getDescription())
-                .status(entity.getStatus())
-                .updatedBy(entity.getUpdatedBy())
-                .createdBy(entity.getCreatedBy())
-                .build();
-    }
 }

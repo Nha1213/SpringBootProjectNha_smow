@@ -1,6 +1,5 @@
 package com.nha.nha_smos.DTO;
 
-
 import lombok.*;
 
 @Getter
@@ -8,7 +7,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RoleRequest {
+
+public class RoleResponse {
+    private Long id;
     private String name;
     private String description;
     private String test;
