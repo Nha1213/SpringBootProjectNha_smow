@@ -33,4 +33,15 @@ public class CategoryService {
         CategoryModel savedCategory = categoryRepository.save(category);
         return categoryMapper.toResponse(savedCategory);
     }
+
+//    public CategoryResponse update(int id, CategoryRequest dto) {
+//        CategoryModel cateory = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category file"+ id));
+//
+//    }
+
+
+
+
+
+
 }
