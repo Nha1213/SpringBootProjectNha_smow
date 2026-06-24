@@ -2,6 +2,7 @@ package com.nha.nha_smos.Service;
 
 import com.nha.nha_smos.DTO.BrandRequest;
 import com.nha.nha_smos.DTO.BrandResponse;
+import com.nha.nha_smos.Exception.ResourceNotFoundException;
 import com.nha.nha_smos.Mapper.BrandMapper;
 import com.nha.nha_smos.Model.BrandModel;
 import com.nha.nha_smos.Model.RoleModel;
@@ -28,8 +29,10 @@ public class BrandService {
     }
 
     public BrandResponse search(int id){
+//        BrandModel brandModel = brandRepository.findById(id)
+//                .orElseThrow(()->new RuntimeException("Brand NOT FOUND!"));
         BrandModel brandModel = brandRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Brand NOT FOUND!"));
+                .orElseThrow(()->new ResourceNotFoundException("Brand NOT FOUND!" + id));
         return mapper.toResponse(brandModel);
     }
 

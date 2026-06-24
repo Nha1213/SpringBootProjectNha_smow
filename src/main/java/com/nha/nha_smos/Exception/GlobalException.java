@@ -8,14 +8,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalException {
 
-    // message error when process
+    //handle error 404 resource not found in server
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleNotFound(ResourceNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                ApiResponse.error(null,exception.getMessage(), HttpStatus.NOT_FOUND)
+        );
+    }
+
+
+    // message error when process error 400
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> exception(MethodArgumentNotValidException exception) {
         Map<String, String> errors = new HashMap<>();
@@ -47,7 +55,7 @@ public class GlobalException {
 //    }
 //    message error auto catch error 500
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception exception) {
+    public ResponseEntity<ApiResponse> handleException(Exception exception) {
        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                ApiResponse.error(null,"Something went wrong!", HttpStatus.INTERNAL_SERVER_ERROR)
        );

@@ -2,11 +2,13 @@ package com.nha.nha_smos.Service;
 
 import com.nha.nha_smos.DTO.CategoryRequest;
 import com.nha.nha_smos.DTO.CategoryResponse;
+import com.nha.nha_smos.Exception.ResourceNotFoundException;
 import com.nha.nha_smos.Mapper.CategoryMapper;
 import com.nha.nha_smos.Model.CategoryModel;
 import com.nha.nha_smos.Repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -24,6 +26,14 @@ public class CategoryService {
                 .stream()
                 .map(categoryMapper::toResponse)
                 .toList();
+    }
+
+
+    public CategoryResponse search(int id){
+        CategoryModel category = categoryRepository.findById(id).orElseThrow(
+                ()->new ResourceNotFoundException("Category not found")
+        );
+        return categoryMapper.toResponse(category);
     }
 
 

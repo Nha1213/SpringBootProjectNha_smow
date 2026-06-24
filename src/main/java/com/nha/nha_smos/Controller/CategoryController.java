@@ -30,8 +30,14 @@ public class CategoryController {
 
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> list(){
-        return ResponseEntity.ok(this.categoryService.gitList());
+    public ResponseEntity<ApiResponse<List<CategoryResponse>>> list(){
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.ok(this.categoryService.gitList()));
+    }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<CategoryResponse>> getList(@PathVariable int id){
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.ok(this.categoryService.search(id)));
     }
 
 //    @PostMapping
