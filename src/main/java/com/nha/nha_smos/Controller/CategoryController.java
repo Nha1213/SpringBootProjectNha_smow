@@ -47,7 +47,8 @@ public class CategoryController {
 //        response.put("name", name);
 //        response.put("status", status);
         Map<String,Object> filterCategory = this.categoryService.filter(id, name, status);
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.ok(filterCategory));
+        List<CategoryModel> cateData = (List<CategoryModel>) filterCategory.get("data");
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.ok(cateData));
     }
 
 
