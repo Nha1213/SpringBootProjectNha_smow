@@ -32,13 +32,13 @@ public class BrandService {
 //        BrandModel brandModel = brandRepository.findById(id)
 //                .orElseThrow(()->new RuntimeException("Brand NOT FOUND!"));
         BrandModel brandModel = brandRepository.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException("Brand NOT FOUND!" + id));
+                .orElseThrow(()->new ResourceNotFoundException("Brand NOT FOUND!" + " " + id));
         return mapper.toResponse(brandModel);
     }
 
     public BrandResponse createBrand(BrandRequest brandRequest){
         if(brandRepository.existsByCode(brandRequest.getCode())){
-            throw new RuntimeException("Brand already exists!");
+            throw new ResourceNotFoundException("Brand already exists!");
         }
         // request -> entity
         BrandModel brandModel = mapper.toEntity(brandRequest);
@@ -51,7 +51,7 @@ public class BrandService {
 
     public BrandResponse updateBrand(int id, BrandRequest Request){
         BrandModel brandModel = brandRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Brand NOT FOUND!" + id));
+                .orElseThrow(()->new ResourceNotFoundException("Brand NOT FOUND!" + id));
         brandModel.setName(Request.getName());
         brandModel.setDescription(Request.getDescription());
         brandModel.setCode(Request.getCode());
