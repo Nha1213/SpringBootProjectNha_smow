@@ -1,6 +1,9 @@
 package com.nha.nha_smos.Repository;
 
 import com.nha.nha_smos.Model.CategoryModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,4 +15,8 @@ public interface CategoryRepository extends JpaRepository<CategoryModel, Integer
     boolean existsByCode(String code);
 
     List<CategoryModel> findAll(Specification<CategoryModel> spec);
+
+    Page<CategoryModel> findAll(Specification<CategoryModel> spec, Pageable pageable);
+
+//    List<CategoryModel> findAll(Specification<CategoryModel> spec, Sort sort);
 }

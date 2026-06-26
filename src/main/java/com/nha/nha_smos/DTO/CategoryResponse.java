@@ -22,5 +22,4 @@ public class CategoryResponse {
     private String createdBy;
     private LocalDateTime updatedAt;
     private String updatedBy;
-
 }

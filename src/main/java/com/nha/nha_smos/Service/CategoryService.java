@@ -10,15 +10,17 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,13 +32,18 @@ public class CategoryService {
     // Display data category
     public List<CategoryResponse> gitList(){
 
-        return categoryRepository.findAll()
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        return categoryRepository.findAll(sort)
                 .stream()
                 .map(categoryMapper::toResponse)
                 .toList();
     }
 
-    public Map<String, Object> filter(Long id, String name, Boolean status){
+    public Map<String, Object> filter(Long id, String name, Boolean status,
+                                      String code, LocalDateTime startDate,
+                                      LocalDateTime endDate, String sortBy, String sortAs,
+                                      int page, int size
+    ) {
 
         //Category entity
         Specification<CategoryModel> spec = Specification.unrestricted();
@@ -62,7 +69,38 @@ public class CategoryService {
                     cb.equal(root.get("status"), status)
             );
         }
-        List<CategoryModel> category = this.categoryRepository.findAll(spec);
+
+        if(code != null && !code.isEmpty()){
+            spec = spec.and((Root<CategoryModel> root, CriteriaQuery<?> query, CriteriaBuilder cb)->
+                        cb.like(cb.lower(root.get("code")), "%" + code.toLowerCase() + "%")
+                    );
+        }
+
+        if(startDate != null){
+            spec = spec.and((Root<CategoryModel> root, CriteriaQuery<?> query, CriteriaBuilder cb)->
+                        cb.between(root.get("createdAt"), startDate, endDate)
+                    );
+        }
+
+//        allow key sort and sort desc or asc
+        List<String> allowSort = List.of("id", "name");
+//        unsorted() is by default
+        Sort sort = Sort.by(Sort.Order.desc("id"));
+        if(sortBy != null && sortAs != null && allowSort.contains(sortBy)){
+//            equalsIgnoreCase don't worry about uppercase or lowercase
+            sort = sortAs.equalsIgnoreCase("desc") ? Sort.by(Sort.Order.desc(sortBy))
+                    : Sort.by(Sort.Order.asc(sortBy));
+        }else {
+            sort = Sort.by(Sort.Order.desc("id"));
+        }
+
+//        make pagination
+        Pageable pageable = PageRequest.of(page-1 , size, sort);
+//        List<CategoryModel> category = this.categoryRepository.findAll(spec,sort);
+        Page<CategoryModel> category = this.categoryRepository.findAll(spec,pageable);
+//        category.getContent();
+//        category.getTotalPages();
+//        category.getTotalElements();
         Map<String, Object> response = new HashMap<>();
         response.put("data", category);
         return response;

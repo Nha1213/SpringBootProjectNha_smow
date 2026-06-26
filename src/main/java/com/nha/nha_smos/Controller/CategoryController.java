@@ -8,13 +8,17 @@ import com.nha.nha_smos.Service.CategoryService;
 import com.nha.nha_smos.Util.ApiResponse;
 import jakarta.validation.Valid;
 import jdk.jfr.Category;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,14 +44,23 @@ public class CategoryController {
     public ResponseEntity<ApiResponse<?>> filter (
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) Boolean status
+            @RequestParam(required = false) Boolean status,
+            @RequestParam(required = false) String code,
+            @RequestParam(required = false) @DateTimeFormat(iso= DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso= DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String sortAs,
+            @RequestParam(required = false, defaultValue = "1") int page,
+            @RequestParam(required = false, defaultValue = "5") int size
     ){
 //        Map<String, Object> response = new HashMap<>();
 //        response.put("id", id);
 //        response.put("name", name);
 //        response.put("status", status);
-        Map<String,Object> filterCategory = this.categoryService.filter(id, name, status);
-        List<CategoryModel> cateData = (List<CategoryModel>) filterCategory.get("data");
+        Map<String,Object> filterCategory = this.categoryService.filter(id, name, status, code, startDate, endDate,
+                sortBy, sortAs, page, size
+        );
+        Page<CategoryModel> cateData = (Page<CategoryModel>) filterCategory.get("data");
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.ok(cateData));
     }
 
