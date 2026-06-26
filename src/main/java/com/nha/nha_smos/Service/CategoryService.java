@@ -2,6 +2,7 @@ package com.nha.nha_smos.Service;
 
 import com.nha.nha_smos.DTO.CategoryRequest;
 import com.nha.nha_smos.DTO.CategoryResponse;
+import com.nha.nha_smos.DTO.PageResponse;
 import com.nha.nha_smos.Exception.ResourceNotFoundException;
 import com.nha.nha_smos.Mapper.CategoryMapper;
 import com.nha.nha_smos.Model.CategoryModel;
@@ -39,10 +40,10 @@ public class CategoryService {
                 .toList();
     }
 
-    public Map<String, Object> filter(Long id, String name, Boolean status,
-                                      String code, LocalDateTime startDate,
-                                      LocalDateTime endDate, String sortBy, String sortAs,
-                                      int page, int size
+    public PageResponse<CategoryResponse> filter(Long id, String name, Boolean status,
+                                              String code, LocalDateTime startDate,
+                                              LocalDateTime endDate, String sortBy, String sortAs,
+                                              int page, int size
     ) {
 
         //Category entity
@@ -98,12 +99,13 @@ public class CategoryService {
         Pageable pageable = PageRequest.of(page-1 , size, sort);
 //        List<CategoryModel> category = this.categoryRepository.findAll(spec,sort);
         Page<CategoryModel> category = this.categoryRepository.findAll(spec,pageable);
+//        PageResponse<CategoryModel> pageResponse = PageResponse.from(category);
 //        category.getContent();
 //        category.getTotalPages();
 //        category.getTotalElements();
-        Map<String, Object> response = new HashMap<>();
-        response.put("data", category);
-        return response;
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("data", category);
+        return PageResponse.from(category, this.categoryMapper::toResponse);
     }
 
 

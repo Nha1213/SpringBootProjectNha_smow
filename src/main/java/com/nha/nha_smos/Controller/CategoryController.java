@@ -1,15 +1,13 @@
 package com.nha.nha_smos.Controller;
 
-import ch.qos.logback.core.model.Model;
 import com.nha.nha_smos.DTO.CategoryRequest;
 import com.nha.nha_smos.DTO.CategoryResponse;
+import com.nha.nha_smos.DTO.PageResponse;
 import com.nha.nha_smos.Model.CategoryModel;
 import com.nha.nha_smos.Service.CategoryService;
 import com.nha.nha_smos.Util.ApiResponse;
 import jakarta.validation.Valid;
-import jdk.jfr.Category;
 import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.DateFormat;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 //@RequiredArgsConstructor
@@ -41,7 +36,7 @@ public class CategoryController {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<ApiResponse<?>> filter (
+    public ResponseEntity<ApiResponse<PageResponse<CategoryResponse>>> filter (
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Boolean status,
@@ -57,11 +52,11 @@ public class CategoryController {
 //        response.put("id", id);
 //        response.put("name", name);
 //        response.put("status", status);
-        Map<String,Object> filterCategory = this.categoryService.filter(id, name, status, code, startDate, endDate,
+        PageResponse<CategoryResponse> filterCategory = this.categoryService.filter(id, name, status, code, startDate, endDate,
                 sortBy, sortAs, page, size
         );
-        Page<CategoryModel> cateData = (Page<CategoryModel>) filterCategory.get("data");
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.ok(cateData));
+//        Page<CategoryModel> cateData = (Page<CategoryModel>) filterCategory.get("data");
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.ok(filterCategory));
     }
 
 

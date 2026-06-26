@@ -27,7 +27,7 @@ public class CategoryMapper {
                 .createdAt(entity.getCreatedAt())
                 .createdBy(entity.getCreatedBy())
                 .updatedAt(entity.getUpdatedAt())
-                .updatedBy(entity.getUpdatedBy())
+//                .updatedBy(entity.getUpdatedBy())
                 .build();
     }
 }
