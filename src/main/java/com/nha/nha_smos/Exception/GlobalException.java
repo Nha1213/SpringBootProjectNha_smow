@@ -54,10 +54,10 @@ public class GlobalException {
 //        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
 //    }
 //    message error auto catch error 500
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse> handleException(Exception exception) {
-       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-               ApiResponse.error(null,"Something went wrong!", HttpStatus.INTERNAL_SERVER_ERROR)
-       );
-    }
+@ExceptionHandler(Exception.class)
+public ResponseEntity<ApiResponse> handleException(Exception exception) {
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+            ApiResponse.error(null, "Something went wrong!", HttpStatus.INTERNAL_SERVER_ERROR)
+    );
+}
 }

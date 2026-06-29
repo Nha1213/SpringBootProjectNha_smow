@@ -42,6 +42,7 @@ public class BrandModel {
     private  LocalDateTime updatedAt;
     private String updatedBy;
 
+
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
