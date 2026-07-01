@@ -26,7 +26,7 @@ public class ProductRequest {
     private Boolean status;
     private String description;
     @NotNull(message = "CategoryId is required!")
-    private Long category_id;
+    private Integer categoryId;
     @NotNull(message = "BrandId is required!")
-    private Long brand_id;
+    private Long brandId;
 }

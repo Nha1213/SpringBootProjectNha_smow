@@ -29,21 +29,21 @@ public class ProductModel {
     private Boolean status;
     private String description;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private LocalDateTime createdAt;
     private String createdBy;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private LocalDateTime updatedAt;
     private String updatedBy;
 
     //relationship
     @ManyToOne(fetch = FetchType.LAZY)// is not get category default
-    @JoinColumn(name = "category_id") // create  in table product.cate_id(fk) -> reference to table category.id
+    @JoinColumn(name = "categoryId") // create  in table product.cate_id(fk) -> reference to table category.id
     private CategoryModel category;  // target to Class CategoryModel
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "brand_id")
+    @JoinColumn(name = "brandId")
     private BrandModel brand;
 
     @PrePersist
