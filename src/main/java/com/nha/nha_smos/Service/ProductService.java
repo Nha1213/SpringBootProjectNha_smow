@@ -11,7 +11,10 @@ import com.nha.nha_smos.Repository.BrandRepository;
 import com.nha.nha_smos.Repository.CategoryRepository;
 import com.nha.nha_smos.Repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,13 @@ public class ProductService {
         ProductModel  product =  this.productMapper.toEntity(req, category,brand);
         this.productRepository.save(product);
         return productMapper.toResponse(product);
+    }
+
+    public List<ProductResponse> list(){
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        return productRepository.findAll(sort)
+                .stream().map(productMapper::toResponse)
+                .toList();
     }
 
 }
