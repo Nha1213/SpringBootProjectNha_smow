@@ -42,4 +42,9 @@ public class ProductService {
                 .toList();
     }
 
+    public  ProductResponse listById(int id){
+        ProductModel  product =  this.productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product Not Found!"));
+        return productMapper.toResponse(product);
+    }
 }

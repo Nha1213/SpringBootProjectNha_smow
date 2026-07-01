@@ -26,6 +26,11 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.ok(this.productService.list()));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductResponse>> listById(@PathVariable int id){
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.ok(this.productService.listById(id)));
+    }
+
     @PostMapping
     public ResponseEntity<ApiResponse<ProductResponse>> saveProduct(@Valid @RequestBody ProductRequest req){
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.create(productService.saveProduct(req)));
