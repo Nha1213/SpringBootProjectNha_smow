@@ -33,6 +33,20 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<ProductResponse>> saveProduct(@Valid @RequestBody ProductRequest req){
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.create(productService.saveProduct(req)));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.create(productService.saveProduct(req)));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(@PathVariable int id, @Valid @RequestBody ProductRequest req){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.ok(this.productService.update(id, req), "product update success"));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductResponse>> deleteProduct(@PathVariable int id){
+        this.productService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.ok(null, "Product deleted successfully"));
+    }
+
 }

@@ -40,10 +40,11 @@ public class CategoryService {
                 .toList();
     }
 
-    public PageResponse<CategoryResponse> filter(Long id, String name, Boolean status,
-                                              String code, LocalDateTime startDate,
-                                              LocalDateTime endDate, String sortBy, String sortAs,
-                                              int page, int size
+    public PageResponse<CategoryResponse> filter(
+            Long id, String name, Boolean status,
+          String code, LocalDateTime startDate,
+          LocalDateTime endDate, String sortBy, String sortAs,
+          int page, int size
     ) {
 
         //Category entity
