@@ -49,4 +49,8 @@ public class UserModel {
             inverseJoinColumns = @JoinColumn( name = "role_id")
     )
     private Set<RoleModel> roles = new HashSet<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserProfileModel profile;
+
 }

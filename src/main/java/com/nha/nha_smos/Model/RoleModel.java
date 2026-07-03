@@ -3,6 +3,9 @@ package com.nha.nha_smos.Model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "roles")
 @Data
@@ -25,4 +28,14 @@ public class RoleModel {
     private String description;
 
     private String test;
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "role_permission",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
+//    when we want to get role have permission it will get.permissions
+    private Set<PermissionModel> permissions = new HashSet<>();
 }
