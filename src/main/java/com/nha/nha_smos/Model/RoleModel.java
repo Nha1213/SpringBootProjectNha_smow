@@ -18,6 +18,10 @@ public class RoleModel {
     @Column(nullable = false, unique = true)
     private String name;
 
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "userId")
+//    private UserModel user;
+
     private String description;
 
     private String test;

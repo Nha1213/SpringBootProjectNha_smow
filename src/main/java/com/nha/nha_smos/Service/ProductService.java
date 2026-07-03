@@ -15,6 +15,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -60,7 +61,7 @@ public class ProductService {
     public PageResponse<ProductResponse> filter(Long id, String productName, Boolean status,
                                                 String code, LocalDateTime startDate,
                                                 LocalDateTime endDate, String sortBy, String sortAs,
-                                                int page, int size)
+                                                int page, int size, Long categoryId, Long brandId)
     {
 
         Specification<ProductModel> spec = Specification.unrestricted();
@@ -83,6 +84,7 @@ public class ProductService {
                     );
         }
 
+
         if( code != null && !code.isEmpty() ){
             spec = spec.and((Root<ProductModel> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
                         cb.like(cb.lower(root.get("code")), "%" + code.toLowerCase() + "%" )
@@ -93,6 +95,18 @@ public class ProductService {
             spec = spec.and((Root<ProductModel> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
                         cb.between(root.get("startDate"), startDate, endDate)
                     );
+        }
+
+        if(categoryId != null){
+            spec = spec.and((Root<ProductModel> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
+                    cb.equal(root.get("category").get("id"), categoryId)
+            );
+        }
+
+        if(brandId != null){
+            spec = spec.and((Root<ProductModel> root, CriteriaQuery<?> query, CriteriaBuilder cb) ->
+                    cb.equal(root.get("brand").get("id"), brandId)
+            );
         }
 
         List<String> allowSort = List.of("id", "productName");

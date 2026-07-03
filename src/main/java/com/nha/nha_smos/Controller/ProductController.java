@@ -64,12 +64,16 @@ public class ProductController {
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String sortAs,
             @RequestParam(required = false, defaultValue = "1") int page,
-            @RequestParam(required = false, defaultValue = "10") int size
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Long brandId
+
 
 
     ){
             PageResponse<ProductResponse> filterProduct = this.productService.filter(
-                    id, productName, status, code, startDate, endDate, sortBy, sortAs, page, size
+                    id, productName, status, code, startDate, endDate, sortBy, sortAs, page, size,
+                    categoryId, brandId
             );
 
             return ResponseEntity.status(HttpStatus.OK)
