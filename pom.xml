@@ -129,7 +129,12 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+<!--                <configuration>-->
+<!--                    <source>26</source>-->
+<!--                    <target>26</target>-->
+<!--                    <compilerArgs>&#45;&#45;enable-preview</compilerArgs>-->
+<!--                </configuration>-->
+            </plugin>
 		</plugins>
 	</build>
 
