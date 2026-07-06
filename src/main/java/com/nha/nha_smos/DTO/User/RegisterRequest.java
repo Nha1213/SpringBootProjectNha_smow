@@ -1,4 +1,4 @@
-package com.nha.nha_smos.DTO;
+package com.nha.nha_smos.DTO.User;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;

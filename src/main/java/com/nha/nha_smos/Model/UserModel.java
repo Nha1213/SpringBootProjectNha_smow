@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.context.annotation.Role;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,9 +35,9 @@ public class UserModel {
     private boolean isActive = true;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
 
     // auto crate table uer_roles, and user_id reverent to
     // roleModel, role_id referent to user_roles
@@ -48,6 +49,7 @@ public class UserModel {
     )
     private Set<RoleModel> roles = new HashSet<>();
 
+    //one to one with profile
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserProfileModel profile;
 

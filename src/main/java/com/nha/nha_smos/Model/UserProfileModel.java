@@ -1,5 +1,6 @@
 package com.nha.nha_smos.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,8 @@ public class UserProfileModel {
     private String address;
     private String image;
 
+    // fk user
+    @JsonIgnore
     @OneToOne()
     @JoinColumn(name = "userId")
     private UserModel user;

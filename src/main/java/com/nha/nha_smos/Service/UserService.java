@@ -1,13 +1,14 @@
 package com.nha.nha_smos.Service;
 
-import com.nha.nha_smos.DTO.RegisterRequest;
+import com.nha.nha_smos.DTO.User.RegisterRequest;
+import com.nha.nha_smos.DTO.User.RegisterResponse;
 import com.nha.nha_smos.Exception.ResourceNotFoundException;
 import com.nha.nha_smos.Model.RoleModel;
 import com.nha.nha_smos.Model.UserModel;
 import com.nha.nha_smos.Model.UserProfileModel;
 import com.nha.nha_smos.Repository.RoleRepository;
 import com.nha.nha_smos.Repository.UserRepository;
-import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +63,15 @@ public class UserService {
         }
 
 
+
+        //Entity to DTO
+//        RegisterResponse res = new RegisterResponse();
+//        res.setEmail(user.getEmail());
+//        res.setPassword(user.getPassword());
+//        res.setPhone(user.getPhone());
+//        res.setProfile(res.getProfile());
+//        res.setCreatedAt(res.getCreatedAt());
+//        res.setRoles(res.getRoles());
         return this.userRepository.save(user);
     }
 }

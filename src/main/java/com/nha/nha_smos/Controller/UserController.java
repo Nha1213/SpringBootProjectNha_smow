@@ -1,12 +1,13 @@
 package com.nha.nha_smos.Controller;
 
-import com.nha.nha_smos.DTO.RegisterRequest;
+import com.nha.nha_smos.DTO.User.RegisterRequest;
+import com.nha.nha_smos.DTO.User.RegisterResponse;
+import com.nha.nha_smos.Mapper.RegisterMapper;
 import com.nha.nha_smos.Model.UserModel;
 import com.nha.nha_smos.Service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +24,9 @@ public class UserController {
 //        this.userService = userService;
 //    }
 
-    @PostMapping("/auth")
+    @PostMapping("/register")
     public ResponseEntity<UserModel>  register(@Valid @RequestBody RegisterRequest req){
-        UserModel user = userService.registerUser(req);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userService.registerUser(req));
     }
 
 }
