@@ -18,6 +18,7 @@ public class RegisterMapper {
 
     public RegisterResponse toResponse(UserModel entity) {
         return RegisterResponse.builder()
+                .id(entity.getId())
                 .email(entity.getEmail())
                 .password(entity.getPassword())
                 .phone(entity.getPhone())

@@ -1,8 +1,8 @@
 package com.nha.nha_smos.Controller;
 
+import com.nha.nha_smos.DTO.User.LoginRequest;
+import com.nha.nha_smos.DTO.User.LoginResponse;
 import com.nha.nha_smos.DTO.User.RegisterRequest;
-import com.nha.nha_smos.DTO.User.RegisterResponse;
-import com.nha.nha_smos.Mapper.RegisterMapper;
 import com.nha.nha_smos.Model.UserModel;
 import com.nha.nha_smos.Service.UserService;
 import jakarta.validation.Valid;
@@ -25,8 +25,12 @@ public class UserController {
 //    }
 
     @PostMapping("/register")
-    public ResponseEntity<UserModel>  register(@Valid @RequestBody RegisterRequest req){
+    public ResponseEntity<UserModel> register(@Valid @RequestBody RegisterRequest req){
         return ResponseEntity.ok(userService.registerUser(req));
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<UserModel> login(@Valid @RequestBody LoginRequest req){
+        return ResponseEntity.ok(userService.login(req));
+    }
 }
