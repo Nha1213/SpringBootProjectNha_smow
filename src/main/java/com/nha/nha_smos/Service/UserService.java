@@ -1,16 +1,22 @@
 package com.nha.nha_smos.Service;
 
 import com.nha.nha_smos.DTO.User.LoginRequest;
+import com.nha.nha_smos.DTO.User.LoginResponse;
 import com.nha.nha_smos.DTO.User.RegisterRequest;
+import com.nha.nha_smos.DTO.User.RegisterResponse;
 import com.nha.nha_smos.Exception.ResourceNotFoundException;
+import com.nha.nha_smos.Mapper.RegisterMapper;
 import com.nha.nha_smos.Model.RoleModel;
 import com.nha.nha_smos.Model.UserModel;
 import com.nha.nha_smos.Model.UserProfileModel;
 import com.nha.nha_smos.Repository.RoleRepository;
 import com.nha.nha_smos.Repository.UserRepository;
+import com.nha.nha_smos.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,10 +24,11 @@ public class UserService {
 
     private  final UserRepository userRepository;
     private  final RoleRepository roleRepository;
-
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    private final RegisterMapper registerMapper;
 
-    public UserModel registerUser(RegisterRequest req) {
+    public RegisterResponse registerUser(RegisterRequest req) {
         if((req.getEmail() == null || req.getEmail().isBlank())
                 || (req.getPassword() == null || req.getPassword().isEmpty())
         ){
@@ -73,14 +80,15 @@ public class UserService {
 //        res.setEmail(user.getEmail());
 //        res.setPassword(user.getPassword());
 //        res.setPhone(user.getPhone());
-//        res.setProfile(res.getProfile());
-//        res.setCreatedAt(res.getCreatedAt());
-//        res.setRoles(res.getRoles());
-        return this.userRepository.save(user);
+//        res.setProfile(user.getProfile());
+//        res.setCreatedAt(user.getCreatedAt());
+//        res.setRoles(user.getRoles());
+        UserModel savedUser = this.userRepository.save(user);
+        return registerMapper.toResponse(savedUser);
     }
 
 
-    public UserModel login(LoginRequest req) {
+    public LoginResponse login(LoginRequest req) {
 
         if((req.getEmail() == null || req.getEmail().isBlank())
                 && (req.getPhone() == null || req.getPhone().isEmpty())
@@ -89,29 +97,53 @@ public class UserService {
         }
 //        find user by  email or phone
         UserModel user = null;
+
+        String username = "";
         if (req.getEmail() != null) {
             user = userRepository.findByEmail(req.getEmail()).orElseThrow(
                     ()->new RuntimeException("Invalid email or password")
             );
+            username  = user.getEmail();
         }else if (req.getPhone() != null) {
             user = userRepository.findByPhone(req.getPhone()).orElseThrow(
                     ()->new RuntimeException("Invalid phone number or password")
             );
+            username =  user.getPhone();
         }
 
-        if(!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid password");
+        boolean isCurrent = passwordEncoder.matches(req.getPassword(), user.getPassword());
+        if(!isCurrent) {
+            throw new ResourceNotFoundException("Invalid password");
         }
 
-//        LoginResponse res = new LoginResponse();
-//        res.setEmail(user.getEmail());
-//        res.setPassword(user.getPassword());
-//        res.setPhone(user.getPhone());
-//        res.setProfile(res.getProfile());
-//        res.setCreatedAt(res.getCreatedAt());
-//        res.setRoles(res.getRoles());
+        //generate access_token / refresh token
+        //find role list
+        List<String> roles  =  user.getRoles().stream().map(r-> r.getName()).toList();
 
-        return this.userRepository.save(user);
+        List<String> permission =  user.getRoles().stream()
+                .flatMap(r -> r.getPermissions().stream())
+                .map(r -> r.getName())
+                .distinct()
+                .toList();
+
+        String AccessToken = jwtUtil.generateAccessJwtToken(username, roles, permission);
+        String RefreshToken = jwtUtil.generateRefreshJwtToken(username);
+
+        LoginResponse res = new LoginResponse();
+
+        res.setEmail(user.getEmail());
+        res.setPassword(user.getPassword());
+        res.setPhone(user.getPhone());
+
+        res.setProfile(user.getProfile());
+        res.setCreatedAt(user.getCreatedAt());
+
+        res.setRoles(roles);
+        res.setPermissions(permission);
+        res.setAccessToken(AccessToken);
+        res.setRefreshToken(RefreshToken);
+
+        return res;
     }
 
 

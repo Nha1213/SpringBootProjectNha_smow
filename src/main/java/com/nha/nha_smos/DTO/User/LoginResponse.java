@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -23,5 +24,10 @@ public class LoginResponse {
     private LocalDate createdAt;
 
     private UserProfileModel profile;
-    private Set<RoleModel> roles;
+//    private Set<RoleModel> roles;
+    List<String>  roles;
+    List<String> permissions;
+    String accessToken;
+    String refreshToken;
 }
+
